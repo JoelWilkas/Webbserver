@@ -1,0 +1,6 @@
+npm i
+
+#Behöver 2 cmd's
+
+nodemon .
+npm run startDB
