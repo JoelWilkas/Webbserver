@@ -1,6 +1,6 @@
 ## Install Dependancies
 ```
-npm start
+npm i
 ```
 
 
