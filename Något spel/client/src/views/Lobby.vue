@@ -14,14 +14,12 @@
 
 <script>
   
-  import RoomConnection from './components/RoomsConnection.vue'
-  import CreateRooms from './components/CreateRooms.vue'
-  import GameLobby from './components/GameLobby.vue'
+  import RoomConnection from '../components/RoomsConnection.vue'
+  import CreateRooms from '../components/CreateRooms.vue'
+  import GameLobby from '../components/GameLobby.vue'
   
-
 export default {
-
-  name: 'App',
+  name: 'Lobby',
   components: {
     RoomConnection,
     CreateRooms,
@@ -49,7 +47,7 @@ export default {
 <style lang="scss">
 body{
   box-sizing: border-box;
-  background: #121212;
+  background: #121212 !important;
   color: #8235f5;
   display: flex;
   flex-direction: column;
@@ -57,10 +55,7 @@ body{
   align-items: center;
   height: 80vh;
 }
-
 .container{
   margin-top: 100px;
 }
-
-
 </style>

@@ -1,10 +1,12 @@
 import { Socket } from 'socket.io'
 import { app, server } from './modules/express'
 import { io } from './modules/socketio'
+import { wordlist } from './modules/wordlist'
 
 let users = []
 
 const rooms: any = []
+const admins: any = []
 
 
 
@@ -20,20 +22,22 @@ io.on('connection', (socket: Socket) => {
                 socket.join(roomid);
                 console.log(socket.rooms)
                 cb(roomid)
-
-                io.to(roomid).emit('welcome', socket.id)
+                
+                io.to(roomid).emit('welcome', socket.id, false)
             }
         }
     })
+    socket.on('gameStarted', (roomid, cb) => {
+        socket.to(roomid).emit('otherGameStart')
+    } )
 
     socket.on('CreateLobby', (roomid: string, cb) => {
         roomid.toString()
         rooms.push(roomid)
         socket.join(roomid)
-        console.log(socket.rooms)
-        console.log("created a room")
+        admins.push({userid: socket.id, room: roomid})
         cb(roomid)
-        io.to(roomid).emit('welcome', socket.id)
+        io.to(roomid).emit('welcome', socket.id, true)
         
     })
 
@@ -47,6 +51,15 @@ io.on('connection', (socket: Socket) => {
                 }
             }
         }
+    })
+    socket.on('gameInit', (roomid, wordCount, cb) => {
+        console.log(`wordcount is ${wordCount}`)
+        let words = []
+        for(let x = 0; x < wordCount; x++){
+            words.push( wordlist[Math.floor(Math.random()*wordlist.length)])
+        }
+        cb(words)
+
     })
 
 
