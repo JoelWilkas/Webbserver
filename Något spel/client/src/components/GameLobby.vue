@@ -2,18 +2,19 @@
     <div class="gameLobby">
         <div class="roomCode">
             <h1>Room Code:</h1>
-            <input v-on:focus="$event.target.select()" 
-            hidden
-            :type="showInput ? 'text': 'password'"
-            @click="copy"
-            :value="room"/>
-           
-            <button @click="showPassword"
-                        type="button"
-                        v-clipboard:copy="room"
-            v-clipboard:success="onCopy"
-            v-clipboard:error="onError"
-            ><img src="https://s2.svgbox.net/hero-outline.svg?ic=eye&color=8235f5" width="32" height="32"></button>
+            <p class="code" v-if="showInput" @click="copy"   :aria-label="tooltipText"
+            data-microtip-position="top"
+            role="tooltip">{{room}}</p>
+            <p class="code" v-else @click="copy" :aria-label="tooltipText"
+            data-microtip-position="top"
+            role="tooltip"><img src="https://s2.svgbox.net/octicons.svg?ic=dot-fill&color=8235f5" width="32" height="32"><img src="https://s2.svgbox.net/octicons.svg?ic=dot-fill&color=8235f5" width="32" height="32"><img src="https://s2.svgbox.net/octicons.svg?ic=dot-fill&color=8235f5" width="32" height="32"><img src="https://s2.svgbox.net/octicons.svg?ic=dot-fill&color=8235f5" width="32" height="32"><img src="https://s2.svgbox.net/octicons.svg?ic=dot-fill&color=8235f5" width="32" height="32"></p>
+            <button @click="showPassword" type="button"
+            ><img src="https://s2.svgbox.net/hero-outline.svg?ic=eye&color=8235f5" width="32" height="32">
+            </button>
+
+            
+
+
         </div>
          
 
@@ -34,7 +35,8 @@ export default {
     },
     data(){
         return{
-             showInput: false
+             showInput: false,
+             tooltipText: "Click to copy"
         }
     },
     mounted(){
@@ -54,8 +56,8 @@ export default {
         copy(){
             console.log("copied")
             navigator.clipboard.writeText(this.room)
-            // this.$refs.myinput.focus();
-            // document.execCommand('copy')
+            this.tooltipText = "Copied!"
+            setTimeout(() => this.tooltipText = "Click to copy", 2000)
         },
     }
 }
@@ -84,9 +86,10 @@ export default {
     .roomCode{
         display: flex;
         align-items: center;
-        h1{
-            margin-right: 2em;
-        }
+        justify-content: space-between;
+        height: 4em;
+        width: 500px;
+        margin-bottom: 2em;
         button{
             width: 50px;
             height: 50px;
@@ -108,4 +111,11 @@ export default {
         flex-direction: column;
         align-items: center;
     }
+    .code{
+        font-size: 3em;
+        &:hover{
+            cursor: pointer;
+        }
+    }
+    
 </style>
