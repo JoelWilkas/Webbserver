@@ -1,5 +1,6 @@
 <template>
-  <div v-if="connected">
+  <div class="container">
+    <div v-if="connected">
     <div v-if="!room">
       
       <CreateRooms />
@@ -8,6 +9,7 @@
     <GameLobby :room="room" v-else/>
   </div>
   <h1 v-else>Could not establish a connection the the servers</h1>
+  </div>
 </template>
 
 <script>
@@ -51,24 +53,14 @@ body{
   color: #8235f5;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   height: 80vh;
 }
 
- button{
-        color: #8235f5;
-        font-weight: bold;
-        font-size: 1.5em;
-        width: 275px;
-        background: rgba(0, 0, 255, 0);
-        border: 5px solid #8235f5;
-        border-radius: 10px;
-        padding: 0.5em;
-    }
+.container{
+  margin-top: 100px;
+}
 
-    button:hover{
-        color: #121212;
-        background: #8235f5;
-    }
+
 </style>

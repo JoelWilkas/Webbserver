@@ -37,6 +37,18 @@ io.on('connection', (socket: Socket) => {
         
     })
 
+    socket.on('roomLeave', roomid =>
+    {
+        socket.leave(roomid)
+        if (!io.sockets.adapter.rooms.get(roomid)?.size){
+            for (let i in rooms){
+                if (rooms[i] == roomid){
+                    rooms.splice(i, 1)
+                }
+            }
+        }
+    })
+
 
     // console.log(`The user ${socket.id} has connected`)
     // socket.on('disconnect', () => {
