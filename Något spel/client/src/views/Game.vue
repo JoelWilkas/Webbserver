@@ -8,16 +8,12 @@
         </p>
     </div>
     <textarea :readonly="isReadonly" type="text" ref="input" @input="inputChange"></textarea>
-
+    <h1 v-if="isGameOver">Your words per minuit was: {{wordsPerMin}}</h1>
 </template>
 <script>
-
 export default {
     
     name: "Game",
-    components: {
-
-    },
     data(){
         return{
             wordArray: [],
@@ -25,7 +21,8 @@ export default {
             coutdownTime: 5,
             countdownVisable: true,
             isGameOver: false,
-            gameTime: 0
+            gameTime: 0,
+            wordsPerMin: 0
         }
     },
     created(){
@@ -50,12 +47,12 @@ export default {
 
         let gameTimer = setInterval(() => {
             if(!this.isGameOver){
-                this.gameTime += 100
+                this.gameTime += 0.01
             } else {
-                // console.log(this.gameTime)
+                // console.log(twhis.gameTime)
                 clearInterval(gameTimer)
             }
-        }, 100)
+        }, 1)
         
     },
     methods: {
@@ -89,7 +86,8 @@ export default {
                 }   
             })
             if(correct){
-                console.log(this.gameTime / 1000 / 15 * 60)
+                console.log(this.gameTime)
+                this.wordsPerMin = Math.round(15 / this.gameTime * 60)
                 this.isGameOver = true
                 this.isReadonly = true
                 console.log("Everything is correct!")
@@ -107,7 +105,7 @@ export default {
         padding: 2em;
         display: block;
         width: 500px;
-        user-select: none;
+        // user-select: none;
         font-size: 1.5em;
     }
     .correct{
