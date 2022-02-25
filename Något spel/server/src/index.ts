@@ -7,6 +7,7 @@ let users = []
 
 const rooms: any = []
 const admins: any = []
+const roomWordList: any = new Map()
 
 
 
@@ -17,7 +18,6 @@ io.on('connection', (socket: Socket) => {
 
     socket.on("join room", (roomid: string, cb) => {
         for(let x in rooms){
-            console.log(x)
             if(rooms[x] == roomid){
                 socket.join(roomid);
                 console.log(socket.rooms)
@@ -52,16 +52,23 @@ io.on('connection', (socket: Socket) => {
             }
         }
     })
-    socket.on('gameInit', (roomid, wordCount, cb) => {
-        console.log(`wordcount is ${wordCount}`)
+    socket.on('gameInit', (roomid, cb) => {
+        // let wordCount = roomWordCount.get(roomid)
+        // let words = []
+        // for(let x = 0; x < wordCount; x++){
+        //     words.push( wordlist[Math.floor(Math.random()*wordlist.length)])
+        // }
+        // cb(words)
+        cb(roomWordList.get(roomid))
+    })
+    socket.on('prepareGame', (roomid, wordCount,) => {
         let words = []
         for(let x = 0; x < wordCount; x++){
             words.push( wordlist[Math.floor(Math.random()*wordlist.length)])
         }
-        cb(words)
+        roomWordList.set(roomid, words)
 
     })
-
 
     // console.log(`The user ${socket.id} has connected`)
     // socket.on('disconnect', () => {

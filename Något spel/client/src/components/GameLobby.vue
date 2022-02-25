@@ -24,7 +24,7 @@
             <option value="30words">30 words</option>
         </select>
 
-        <button class="startGame" @click="startGame">Start Game</button>
+        <button v-if="admin" class="startGame" @click="startGame">Start Game</button>
         <button @click="back" >Back </button>
     </div>
 </template>
@@ -89,6 +89,7 @@ export default {
             } else if(this.wordCount == "30words"){
                 this.$store.commit('changeWordCount', 30)
             }
+            this.$store.state.socket.emit('prepareGame', this.room, this.$store.state.wordCount)
             this.$router.push('/game')
         },
         onChange(e){

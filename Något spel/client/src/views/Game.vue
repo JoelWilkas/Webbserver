@@ -1,18 +1,30 @@
 <template>
-    aaa
+    <p>{{wordString}}</p>
 </template>
 <script>
 export default {
     name: "Game",
+    data(){
+        return{
+            wordString: ""
+        }
+    },
     created(){
-        console.log(this.$store.state.wordCount)
+
         if(!this.$store.state.room) this.$router.push('/')
-        this.$store.state.socket.emit('gameInit', this.$store.state.room, this.$store.state.wordCount, (wordList) => this.gameInit(wordList))
+        this.$store.state.socket.emit('gameInit', this.$store.state.room, (wordList) => this.gameInit(wordList))
+
     },
     methods: {
         gameInit(wordList){
             console.log(wordList)
+            this.wordString = wordList + " "
         }
     }
 }
 </script>
+<style lang="scss" scoped>
+    *{
+        color: #8235f5;
+    }
+</style>
