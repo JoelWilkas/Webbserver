@@ -4,7 +4,7 @@ import io from 'socket.io-client'
 
 export default createStore({
     state: {
-        socket: io('http://10.32.37.160:3000'),
+        socket: io('http://localhost:3000'),
         room: "",
         wordCount: 15
     },

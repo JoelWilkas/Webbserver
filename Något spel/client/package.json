@@ -17,6 +17,7 @@
     "vue-clipboard2": "^0.3.3",
     "vue-copy-to-clipboard": "^1.0.3",
     "vue-router": "^4.0.0-0",
+    "vuedals": "^1.8.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
