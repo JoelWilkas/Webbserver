@@ -1,4 +1,5 @@
 <template>
+    
     <h1 class="countdown" v-if="countdownVisable">{{coutdownTime}}</h1>
     <div class="words">
         <p ref="wordDisplay">
@@ -8,7 +9,14 @@
         </p>
     </div>
     <textarea :readonly="isReadonly" type="text" ref="input" @input="inputChange"></textarea>
-    <h1 v-if="isGameOver">Your words per minuit was: {{wordsPerMin}}</h1>
+    <!-- <h1 v-if="isGameOver">Your words per minuit was: {{wordsPerMin}}</h1> -->
+
+    <h3 v-if="coutdownTime == 0">You Are Player{{ playerid }}</h3>
+
+    <h1 v-for="player in playersDone" :key="player">
+        player {{ player }} has finnished!
+    </h1>
+
 </template>
 <script>
 export default {
@@ -22,14 +30,19 @@ export default {
             countdownVisable: true,
             isGameOver: false,
             gameTime: 0,
-            wordsPerMin: 0
+            wordsPerMin: 0,
+            playerid: 0,
+            playersDone: []
         }
     },
     created(){
 
         if(!this.$store.state.room) this.$router.push('/')
         this.$store.state.socket.emit('gameInit', this.$store.state.room, (wordList) => this.gameInit(wordList))
-
+        this.playerid = this.$store.state.playerNumber  
+        this.$store.state.socket.on('finnished', (playerNumber) => {
+            this.playersDone.push(playerNumber)
+        })
     },
     mounted(){
         
@@ -91,6 +104,14 @@ export default {
                 this.isGameOver = true
                 this.isReadonly = true
                 console.log("Everything is correct!")
+
+
+
+
+
+                this.$store.state.socket.emit('finnished',  this.$store.state.room, this.$store.state.playerNumber)
+
+
             }
         }
     },
@@ -116,6 +137,7 @@ export default {
         text-decoration: underline;
     }
     textarea{
+        margin-bottom: 5em;
         width: 500px;
         height: 7;
         background: none;

@@ -8,7 +8,7 @@ let users = []
 const rooms: any = []
 const admins: any = []
 const roomWordList: any = new Map()
-
+const playerNumber: any = []
 
 
 io.on('connection', (socket: Socket) => {
@@ -22,7 +22,15 @@ io.on('connection', (socket: Socket) => {
                 socket.join(roomid);
                 console.log(socket.rooms)
                 cb(roomid)
-                
+                for (let x in playerNumber)
+                {
+                    if (playerNumber[x].room == roomid)
+                    {
+                        playerNumber[x].player += 1
+                        io.to(roomid).emit('welcome', socket.id, false, playerNumber[x].player)
+                        console.log(playerNumber[x].player)
+                    }
+                }
                 io.to(roomid).emit('welcome', socket.id, false)
             }
         }
@@ -37,8 +45,15 @@ io.on('connection', (socket: Socket) => {
         socket.join(roomid)
         admins.push({userid: socket.id, room: roomid})
         cb(roomid)
-        io.to(roomid).emit('welcome', socket.id, true)
-        
+        playerNumber.push({player: 1, room: roomid})
+        for (let x in playerNumber)
+        {
+            if (playerNumber[x].room == roomid)
+            {
+                io.to(roomid).emit('welcome', socket.id, true, playerNumber[x].player)
+                console.log("Obamamaasdasdhdsads")
+            }
+        }
     })
 
     socket.on('roomLeave', roomid =>
@@ -70,10 +85,9 @@ io.on('connection', (socket: Socket) => {
 
     })
 
-    // console.log(`The user ${socket.id} has connected`)
-    // socket.on('disconnect', () => {
-    //     console.log(`user ${socket.id} has left`)
-    // })
+    socket.on('finnished', (roomid, player) => {
+        io.to(roomid).emit('finnished', player)
+    })
 })
 
 

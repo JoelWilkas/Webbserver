@@ -4,9 +4,10 @@ import io from 'socket.io-client'
 
 export default createStore({
     state: {
-        socket: io('http://localhost:3000'),
+        socket: io('10.32.37.160:3000'),
         room: "",
-        wordCount: 15
+        wordCount: 15,
+        playerNumber: 0
     },
     mutations: {
         changeRoom: (state, roomid) => {
@@ -14,6 +15,9 @@ export default createStore({
         },
         changeWordCount: (state, wordCount) => {
             state.wordCount = wordCount
+        },
+        changePlayer: (state, playerNumber) => {
+            state.playerNumber = playerNumber
         }
     },
     actions: {

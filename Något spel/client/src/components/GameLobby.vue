@@ -50,11 +50,13 @@ export default {
         }
     },
     mounted(){
-        this.$store.state.socket.on('welcome', (socket, admin) => {
+        this.$store.state.socket.on('welcome', (socket, admin, playerid) => {
             console.log(`${socket} has joined the lobby`)
+
             if(!this.loggedin){
                 this.loggedin = true
                 this.admin = admin
+                this.$store.commit("changePlayer", playerid)
             }
         })
         this.$store.state.socket.on('otherGameStart', () => {
@@ -69,6 +71,7 @@ export default {
         showPassword(e){
             e.preventDefault()
             this.showInput = !this.showInput
+            console.log(this.$store.state.playerNumber)
         },
         copy(){
             console.log("copied")
