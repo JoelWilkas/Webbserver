@@ -31,6 +31,7 @@ router.get('/users/:id', (req, res) => {
 
 // users post api with username and password
 router.post('/users', (req, res) => {
+    if(!req.body.username || !req.body.password) return res.sendStatus(422);
     con.query('INSERT INTO users (username, password) VALUES (?, ?)', [req.body.username, req.body.password], (err, result) => {
         if (err) throw err;
         res.send(result);
