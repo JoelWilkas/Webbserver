@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql')
-
+const hash = require('crypto')
 // jwt
 const jwt = require('jsonwebtoken');
 
@@ -23,16 +23,22 @@ router.get('/users', (req, res) => {
 
 // user get api with id
 router.get('/users/:id', (req, res) => {
+    if(!req.body.password) return res.sendStatus(422);
     con.query('SELECT * FROM users WHERE id = ?', [req.params.id], (err, result) => {
         if (err) throw err;
-        res.send(result);
+        if (result[0].password == hashPassword(req.body.password)) {
+
+            res.send(result[0].username);
+        } else {
+            res.send("You do not have the right access!");
+        }
     });
 });
 
 // users post api with username and password
 router.post('/users', (req, res) => {
     if(!req.body.username || !req.body.password) return res.sendStatus(422);
-    con.query('INSERT INTO users (username, password) VALUES (?, ?)', [req.body.username, req.body.password], (err, result) => {
+    con.query('INSERT INTO users (username, password) VALUES (?, ?)', [req.body.username, hashPassword(req.body.password)], (err, result) => {
         if (err) throw err;
         res.send(result);
     });
@@ -130,6 +136,10 @@ function verifyToken(req, res, next) {
     }
 }
 
+
+function hashPassword(password) {
+    return hash.createHash('sha256').update(password).digest('hex');
+}
 
 
 module.exports = router;
