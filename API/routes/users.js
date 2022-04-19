@@ -12,16 +12,16 @@ const con = mysql.createConnection({
     database: 'api'
 });
 
-// user get api
+// user get route
 router.get('/users', (req, res) => {
-    con.query('SELECT * FROM users', (err, result) => {
+    con.query('SELECT username FROM users', (err, result) => {
         if (err) throw err;
         res.json(result);
     });
    
 });
 
-// user get api with id
+// user get route with id
 router.get('/users/:id', (req, res) => {
     if(!req.body.password) return res.sendStatus(422);
     con.query('SELECT * FROM users WHERE id = ?', [req.params.id], (err, result) => {
@@ -35,7 +35,7 @@ router.get('/users/:id', (req, res) => {
     });
 });
 
-// users post api with username and password
+// users post route with username and password
 router.post('/users', (req, res) => {
     if(!req.body.username || !req.body.password) return res.sendStatus(422);
     con.query('INSERT INTO users (username, password) VALUES (?, ?)', [req.body.username, hashPassword(req.body.password)], (err, result) => {
@@ -44,7 +44,7 @@ router.post('/users', (req, res) => {
     });
 });
 
-// users delete api
+// users delete route
 router.delete('/users/:id', verifyToken ,(req, res) => {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if (err) {
@@ -61,7 +61,7 @@ router.delete('/users/:id', verifyToken ,(req, res) => {
     });
 });
 
-// users update api
+// users update route
 router.put('/users/:id', verifyToken, (req, res) => {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if (err) {
@@ -80,7 +80,7 @@ router.put('/users/:id', verifyToken, (req, res) => {
 
 });
 
-// users patch password api
+// users patch password route
 router.patch('/users/:id', verifyToken,(req, res) => {
 
     jwt.verify(req.token, 'secretkey', (err, authData) => {
@@ -106,13 +106,13 @@ router.patch('/users/:id', verifyToken,(req, res) => {
 
 // user login
 router.post('/users/login', verifyToken, (req, res) => {
-    con.query('SELECT * FROM users WHERE username = ? AND password = ?', [req.body.username, req.body.password], (err, result) => {
+    console.log(hashPassword(req.body.password))
+    con.query('SELECT * FROM users WHERE username = ? AND password = ?', [req.body.username, hashPassword(req.body.password)], (err, result) => {
         if (err) throw err;
         if (result.length > 0) {
             const token = jwt.sign({ id: result[0].id }, 'secretkey', { expiresIn: '1h' });
             res.json({
-                token,
-                user: result[0]
+                token
             });
         } else {
             res.send('Username or password is incorrect');
@@ -136,7 +136,7 @@ function verifyToken(req, res, next) {
     }
 }
 
-
+// hash function
 function hashPassword(password) {
     return hash.createHash('sha256').update(password).digest('hex');
 }
